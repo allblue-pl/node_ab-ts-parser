@@ -1,0 +1,29 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+        {
+            "label": "watch",
+            "type": "shell",
+            "command": "echo \"Running task...\"",
+            "dependsOn": [ "ab_watch", "ts_watch" ],
+            "group": "build"
+        },
+        {
+            "label": "ab_watch",
+            "type": "shell",
+            "command": "ab ts-watch",
+            "options": {
+                "cwd": "${workspaceFolder}/.dev"
+            },
+        },
+        {
+            "label": "ts_watch",
+            "type": "typescript",
+            "tsconfig": "app/tsconfig.json",
+            "option": "watch",
+            "problemMatcher": [
+                "$tsc-watch"
+            ]
+        }
+    ]
+}

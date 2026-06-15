@@ -1,0 +1,8 @@
+{
+  "name": "ab-ts-parser_test",
+  "version": "0.0.1",
+  "type": "module",
+  "dependencies": {
+    "typescript": "6.0.*"
+  }
+}

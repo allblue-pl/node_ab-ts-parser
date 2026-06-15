@@ -1,0 +1,4 @@
+{
+  "type": "link",
+  "hash": "{\"abDependencies\":{\"@allblue/ts0\":{\"url\":\"https://github.com/allblue-pl/js_ts0\",\"branch\":\"main\"},\"ab-fs\":{\"url\":\"https://github.com/allblue-pl/node_ab-fs\",\"branch\":\"main\"},\"ab-tasks\":{\"url\":\"https://github.com/allblue-pl/node_ab-tasks\",\"branch\":\"main\"},\"ab-fs-matcher\":{\"url\":\"https://github.com/allblue-pl/node_ab-fs-matcher\",\"branch\":\"main\"},\"ab-fs-watcher\":{\"url\":\"https://github.com/allblue-pl/node_ab-fs-watcher\",\"branch\":\"main\"},\"ab-log\":{\"url\":\"https://github.com/allblue-pl/node_ab-lod\",\"branch\":\"main\"}}}"
+}
