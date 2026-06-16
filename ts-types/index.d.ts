@@ -3,6 +3,5 @@ import abTS from "./ts-lib/abTS.ts";
 import abTSBuilder from "./ts-lib/abTSBuilder.ts";
 import abTSParser from "./ts-lib/abJSLibsParser.ts";
 import abTSValidator from "./ts-lib/abTSValidator.ts";
-
 export default abTS;
 export { abJSLegacy, abTSBuilder, abTSParser, abTSValidator };

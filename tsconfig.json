@@ -3,7 +3,6 @@
         "allowImportingTsExtensions": true,
         "declaration": true,
         "declarationDir": "./ts-types",
-        "declarationMap": true,
         "emitDeclarationOnly": true,
         "erasableSyntaxOnly": true,
         "module": "nodenext",
@@ -12,10 +11,8 @@
         "rootDir": ".",
         "strict": true,
         "target": "esnext",
-        "typeRoots": [
-            "./node_modules/@types"
-        ],
-        "types": ["node"],
+        "typeRoots": [ "./node_modules/@types", "./node_modules/ab-fs-watcher/js-modules", ],
+        "types": [ "anymatch", "node"],
         "useDefineForClassFields": true,
         "verbatimModuleSyntax": true
     },

@@ -1,7 +1,7 @@
 import type { abTSBuilder_Class } from "./abTSBuilder.ts";
 import abTSBuilder from "./abTSBuilder.ts";
 import abJSLegacy, { abJSLegacy_Class } from "./abTSLegacy.ts";
-import abTSParser, { abTSParser_Class } from "./abTSParser.ts";
+import abTSParser, { abTSParser_Class } from "./abJSLibsParser.ts";
 import type { abTSValidator_Class } from "./abTSValidator.ts";
 import abTSValidator from "./abTSValidator.ts";
 
