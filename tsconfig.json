@@ -11,7 +11,10 @@
         "rootDir": ".",
         "strict": true,
         "target": "esnext",
-        "typeRoots": [ "./node_modules/@types", "./node_modules/ab-fs-watcher/js-modules", ],
+        "typeRoots": [
+            "./node_modules/@types", 
+            "./node_modules/ab-fs-watcher/js-modules", 
+        ],
         "types": [ "anymatch", "node"],
         "useDefineForClassFields": true,
         "verbatimModuleSyntax": true

@@ -1,11 +1,13 @@
 import abTSParser from "../ts-lib/abTSParser.ts";
+import abTSValidator from "../ts-lib/abTSValidator.ts";
 import fs from "node:fs";
 
-let src = fs.readFileSync("./A.ts").toString();
+let data = fs.readFileSync("./A.js").toString();
 
 let exportDefines: Array<string> = [];
 let errors: Array<string> = [];
 
-src = abTSParser.parseData("./A.ts", "./A.ts", src, exportDefines, errors);
+// data = abTSParser.parseData(data);
+abTSValidator.validateData("./A.js", "./A.js", data, errors);
 
-console.log(src);
+console.log(errors);

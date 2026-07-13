@@ -1,3 +1,5 @@
-import abTSBuilder from "./ts-lib/abTSBuilder.ts";
+import abTSWatcher from "./ts-lib/abTSWatcher.ts";
+import path from "node:path";
 
-abTSBuilder.watch(".");
+abTSWatcher.watchTSInfo(path.resolve("."), path.resolve("."), 
+        { tsconfig: ".", libs: [ "." ] });

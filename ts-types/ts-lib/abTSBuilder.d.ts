@@ -1,8 +1,7 @@
 export declare class abTSBuilder_Class {
-    #private;
     constructor();
-    validateTSConfig_Async(tsconfigFSPath: string): Promise<boolean>;
-    watch(abTSRelPath: string, validate?: boolean, init?: boolean): void;
+    buildFile_Async(projectFSPath: string, libFSPath: string, fsPath: string, buildErrors: Array<string>): void;
+    getFileDestFSPath(tsconfigFSPath: string, fsPath: string): string;
 }
 declare const abTSBuilder: abTSBuilder_Class;
 export default abTSBuilder;

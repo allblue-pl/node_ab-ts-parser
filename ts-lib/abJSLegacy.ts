@@ -36,11 +36,13 @@ export class abJSLegacy_Class {
 
             let m;
 
-            m = data_Arr[i].match(/^ *([a-zA-Z0-9\_]+) *= *require\(("|')([a-zA-Z0-9\.\_\/\-]+)("|')\),?$/);
+            m = data_Arr[i].match(/^ *([a-zA-Z0-9\_\$]+) *= *require\(("|')([a-zA-Z0-9\_\$\.\/\-]+)("|')\),?$/);
             if (m !== null) {
                 let scriptPath = m[3];
-                if (path.extname(scriptPath) === "")
-                    scriptPath += path.extname(fsPath);
+                if (scriptPath[0] === ".") {
+                    if (path.extname(scriptPath) === "")
+                        scriptPath += path.extname(fsPath);
+                }
                 data_Arr_New.push(`import ${m[1]} from "${scriptPath}";`);
                 continue;
             }
