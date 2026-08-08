@@ -3,11 +3,9 @@ import { Task, Tasker } from "ab-tasks";
 import fs from "node:fs";
 import abFS, { abFSWatcher } from "ab-fs";
 import path from "node:path";
-import tsBlankSpace from "ts-blank-space";
 import abTSValidator from "./abTSValidator.ts";
-import { ts0, ts0Assert, type TS0RawObject } from "@allblue/ts0";
+import ts0, { type TS0RawObject } from "@allblue/ts0";
 import { type WatchEventType } from "ab-fs-watcher";
-import abTSParser from "./abTSParser.ts";
 import abTSBuilder from "./abTSBuilder.ts";
 
 export default class TSWatcher {
@@ -15,15 +13,18 @@ export default class TSWatcher {
     #finishedTask: Task<void>;
     #libFSPaths: {[tsconfig: string]: Array<string>};
     #tasker: Tasker;
+    #validateOnly: boolean;
     #projectFSPath: string;
     #validationErrors: {[tsconfig: string]: Array<string>};
     #validationTasks: {[tsconfig: string]: Task<undefined>};
     #validationTaskCalls: {[tsconfig: string]: number};
     #watching: boolean;
 
-    constructor(projectFSPath: string, abTSFSPath: string, abTSInfo: ABTSInfo|null = null) {
+    constructor(projectFSPath: string, abTSFSPath: string, 
+            abTSInfo: ABTSInfo|null = null, validateOnly: boolean) {
         this.#buildErrors = {};
         this.#libFSPaths = {};
+        this.#validateOnly = validateOnly;
         this.#projectFSPath = projectFSPath;
         this.#validationErrors = {};
         this.#validationTasks = {};
@@ -31,12 +32,7 @@ export default class TSWatcher {
         this.#watching = false;
 
         this.#finishedTask = new Task("finished", (argsArr) => {
-            abLog.info("Processing...");
-
-            for (let fsPath in this.#buildErrors) {
-                for (let error of this.#buildErrors[fsPath])
-                    abLog.warn(error);
-            }
+            console.clear();
 
             let finished = true;
             for (let tsconfig in this.#validationTasks) {
@@ -52,8 +48,22 @@ export default class TSWatcher {
                     finished = false;
             }
 
-            if (finished)
-                abLog.success("Finished.");
+            if (finished) {
+                abLog.info("Logs:");
+
+                for (let fsPath in this.#buildErrors) {
+                    for (let error of this.#buildErrors[fsPath])
+                        abLog.warn(error);
+                }
+
+                for (let tsconfig in this.#validationTasks) {
+                    for (let error of this.#validationErrors[tsconfig])
+                        abLog.warn(error);
+                }
+
+                abLog.success("Finished: " + (new Date()).toLocaleTimeString());
+            } else
+                abLog.info("Processing...");
 
             return true;
         });
@@ -61,15 +71,17 @@ export default class TSWatcher {
         this.#tasker = new Tasker(250);
 
         /* ABTSInfo */
-        let error = "";
+        let errors: Array<string> = [];
         if (abTSInfo === null)
-            abTSInfo = this.#getTSInfo(abTSFSPath, error);
+            abTSInfo = this.#getTSInfo(abTSFSPath, errors);
 
         if (abTSInfo === null) {
-            if (error !== "")
-                throw new Error(`Cannot read 'ab-ts.json' in '${abTSFSPath}': ` + error);                
+            if (errors.length > 0) {
+                throw new Error(`Cannot read ts info in '${abTSFSPath}': ` + 
+                errors.join(" "));  
+            }              
 
-            throw new Error(`Cannot parse 'ab-ts.json' in '${abTSFSPath}'.`);
+            throw new Error(`Cannot parse ts info in '${abTSFSPath}'.`);
         }
 
         let tsconfig = path.join(abTSFSPath, abTSInfo.tsconfig);
@@ -89,17 +101,18 @@ export default class TSWatcher {
     }
 
     addABTSInfo(abTSFSPath: string, abTSInfo: ABTSInfo|null = null): void {
-        let error = "";
+        let errors: Array<string> = [];
         if (abTSInfo === null)
-            abTSInfo = this.#getTSInfo(abTSFSPath, error);
+            abTSInfo = this.#getTSInfo(abTSFSPath, errors);
 
         if (abTSInfo === null) {
-            if (error !== "") {
-                abLog.error(`Cannot read 'ab-ts.json' in '${abTSFSPath}':`, error);                
+            if (errors.length > 0) {
+                abLog.error(`Cannot read ts info in '${abTSFSPath}':`, 
+                        errors.join(" "));                
                 return;
             }
 
-            abLog.warn(`'ab-ts.json' in ${abTSFSPath}' does not exist.`);
+            abLog.warn(`Cannot parse ts info in ${abTSFSPath}'.`);
 
             return;
         }
@@ -127,17 +140,19 @@ export default class TSWatcher {
 
         for (let tsconfig in this.#libFSPaths) {
             for (let libFSPath of this.#libFSPaths[tsconfig]) {
-                if (fs.existsSync(path.join(libFSPath, "index.js")))
-                    fs.unlinkSync(path.join(libFSPath, "index.js"));
-                if (fs.existsSync(path.join(libFSPath, "lib")))
-                    abFS.rmdirRecursiveSync(path.join(libFSPath, "lib"));
-                if (fs.existsSync(path.join(libFSPath, "ts-types")))
-                    abFS.rmdirRecursiveSync(path.join(libFSPath, "ts-types"));
+                if (!this.#validateOnly) {
+                    if (fs.existsSync(path.join(libFSPath, "index.js")))
+                        fs.unlinkSync(path.join(libFSPath, "index.js"));
+                    if (fs.existsSync(path.join(libFSPath, "lib")))
+                        abFS.rmdirRecursiveSync(path.join(libFSPath, "lib"));
+                    if (fs.existsSync(path.join(libFSPath, "ts-types")))
+                        abFS.rmdirRecursiveSync(path.join(libFSPath, "ts-types"));
 
-                abFS.mkdirRecursiveSync(path.join(libFSPath, "lib"));
-                abFS.mkdirRecursiveSync(path.join(libFSPath, "ts-types"));
+                    abFS.mkdirRecursiveSync(path.join(libFSPath, "lib"));
+                    abFS.mkdirRecursiveSync(path.join(libFSPath, "ts-types"));
+                }
 
-                abFSWatcher.watch([
+                let w = abFSWatcher.watch([
                     `${libFSPath}/index.ts`,
                     `${libFSPath}/ts-lib/**/*.ts`,
                 ], [ "add", "change", "unlink" ], (fsPath: string, 
@@ -165,24 +180,41 @@ export default class TSWatcher {
     }
 
 
-    #getTSInfo(tsconfigFSPath: string, error: string): ABTSInfo|null {
-        let fsPath = path.join(tsconfigFSPath, "ab-ts.json");
-        if (!fs.existsSync(fsPath)) {
+    #getTSInfo(tsconfigFSPath: string, errors: Array<string>): ABTSInfo|null {
+        let fsPath = path.join(tsconfigFSPath, ".ab-dev");
+        if (!fs.existsSync(fsPath))
             return null;
-        }
 
         let abTSInfo_Raw: TS0RawObject = {};
-        try {
-            abTSInfo_Raw = JSON.parse(fs.readFileSync(fsPath).toString());
-        } catch (err) {
-            error = (err as Error).message;
-            return null;
+
+        if (fs.lstatSync(fsPath).isDirectory()) {
+            fsPath = path.join(fsPath, ".ab-ts");
+            if (!fs.existsSync(fsPath))
+                throw new Error(`No '.ab-ts' in '${fsPath}'.`);
+
+            try {
+                abTSInfo_Raw = JSON.parse(fs.readFileSync(fsPath).toString());
+            }  catch (err) {
+                errors.push((err as Error).message);
+                return null;
+            }
+        } else {
+            try {
+                let json = JSON.parse(fs.readFileSync(fsPath).toString());
+                if (!("abTS" in json))
+                    throw new Error(`No 'abTS' in '${fsPath}'.`);
+                abTSInfo_Raw = json.abTS;
+            } catch (err) {
+                errors.push((err as Error).message);
+                return null;
+            }
         }
 
         try {
-            return ts0.assertType(abTSInfo_Raw, ABTSInfo_Preset) as ABTSInfo;
+            // return abTSInfo_Raw as ABTSInfo;
+            return ts0.assertType<ABTSInfo>(abTSInfo_Raw, presets_ABTSInfo);
         } catch (err) {
-            error = (err as Error).toString();
+            errors.push((err as Error).toString());
             return null;
         }
     }
@@ -192,7 +224,7 @@ export default class TSWatcher {
 
         let buildErrors: Array<string> = [];
         abTSBuilder.buildFile_Async(this.#projectFSPath, libFSPath, fsPath, 
-                buildErrors);
+                buildErrors, this.#validateOnly);
 
         for (let buildError of buildErrors)
             this.#buildErrors[fsPath].push(buildError);
@@ -235,7 +267,7 @@ export type ABTSInfo = {
     libs: Array<string>,
 };
 
-let ABTSInfo_Preset = ts0.TPreset({
+let presets_ABTSInfo = ts0.TPreset({
     tsconfig: "string",
     libs: ts0.TArray("string"),
 });

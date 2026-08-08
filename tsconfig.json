@@ -6,21 +6,21 @@
         "emitDeclarationOnly": true,
         "erasableSyntaxOnly": true,
         "module": "nodenext",
+        "noImplicitOverride": true,
         "outDir": ".",
         "rewriteRelativeImportExtensions": true,
         "rootDir": ".",
         "strict": true,
         "target": "esnext",
         "typeRoots": [
-            "./node_modules/@types", 
-            "./node_modules/ab-fs-watcher/js-modules", 
+            "./node_modules/@types",
+            "./node_modules/ab-matcher/js-types"
         ],
-        "types": [ "anymatch", "node"],
+        "types": [ "node", "normalize-path", "picomatch" ],
         "useDefineForClassFields": true,
         "verbatimModuleSyntax": true
     },
     "exclude": [
-        "./index.d.ts",
         "./lib/**/*",
         "./tests/**/*",
         "./ts-types/**/*",

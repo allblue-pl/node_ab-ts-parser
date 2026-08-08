@@ -1,6 +1,6 @@
 export default class TSWatcher {
     #private;
-    constructor(projectFSPath: string, abTSFSPath: string, abTSInfo?: ABTSInfo | null);
+    constructor(projectFSPath: string, abTSFSPath: string, abTSInfo: ABTSInfo | null | undefined, validateOnly: boolean);
     addABTSInfo(abTSFSPath: string, abTSInfo?: ABTSInfo | null): void;
     watch(): void;
 }

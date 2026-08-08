@@ -2,6 +2,13 @@
     "abDependencies": {
         "@allblue/ts0": "https://github.com/allblue-pl/js_ts0",
         "ab-fs": "https://github.com/allblue-pl/node_ab-fs",
-        "ab-tasks": "https://github.com/allblue-pl/node_ab-tasks"
+        "ab-tasks": "https://github.com/allblue-pl/node_ab-tasks",
+        "ab-matcher": "https://github.com/allblue-pl/node_ab-matcher"
+    },
+    "abTS": {
+      "tsconfig": ".",
+      "libs": [
+        "."
+      ]
     }
 }

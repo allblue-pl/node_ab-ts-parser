@@ -1,5 +1,5 @@
 import abJSLegacy from "./ts-lib/abJSLegacy.ts";
-import abTSBuilder from "./ts-lib/abTSWatcher.ts";
 import abTSValidator from "./ts-lib/abTSValidator.ts";
-import TSBuilder from "./ts-lib/TSWatcher.ts";
-export { abJSLegacy, abTSBuilder, abTSValidator, TSBuilder };
+import abTSWatcher from "./ts-lib/abTSWatcher.ts";
+import TSWatcher from "./ts-lib/TSWatcher.ts";
+export { abJSLegacy, abTSValidator, abTSWatcher, TSWatcher };

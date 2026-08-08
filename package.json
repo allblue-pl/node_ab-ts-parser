@@ -5,8 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "ts-blank-space": "0.9.*",
-    "ts-morph": "28.0.*",
-    "typescript": "7.0.*"
+    "ts-morph": "28.0.*"
   },
   "devDependencies": {
     "@types/node": "25.9.*"
