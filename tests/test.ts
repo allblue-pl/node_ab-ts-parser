@@ -5,9 +5,8 @@ import fs from "node:fs";
 let data = fs.readFileSync("./A.js").toString();
 
 let exportDefines: Array<string> = [];
-let errors: Array<string> = [];
 
-// data = abTSParser.parseData(data);
-abTSValidator.validateData("./A.js", "./A.js", data, errors);
+data = abTSParser.parseData(data);
+// let errors = abTSValidator.validateData(".", "./A.js", "./A.js", data);
 
-console.log(errors);
+console.log(data);

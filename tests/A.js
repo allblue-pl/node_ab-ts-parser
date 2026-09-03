@@ -1,4 +1,8 @@
-import js0 from "js0";
+import {
+    js0,
+    js1,
+    js2,
+} from "js0";
 
 module.exports.escapeString = function(str) {
     return str.replace(/\'/g, '\'\'');
