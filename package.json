@@ -1,9 +1,13 @@
 {
   "name": "@allblue/ab-ts-parser",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "main": "index.js",
   "dependencies": {
+    "@allblue/ts0": "0.0.*",
+    "ab-fs": "0.1.*",
+    "ab-tasks": "0.0.*",
+    "ab-matcher": "0.0.*",
     "ts-blank-space": "0.9.*",
     "ts-morph": "28.0.*"
   },
