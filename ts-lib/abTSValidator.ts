@@ -246,6 +246,7 @@ export class abTSValidator_Class {
         }
 
         let excludePaths = [
+            "./.dev/**/*",
             "./tests/**/*",
         ];
         if (!noEmit) {
